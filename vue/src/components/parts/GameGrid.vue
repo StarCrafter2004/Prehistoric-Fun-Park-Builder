@@ -11,6 +11,7 @@
       @cell-click="handleCellClick"
       @cell-hover="handleCellHover"
       @cell-leave="handleCellLeave"
+      @cell-delete="handleDelete"
       :ref="`cell-${cell.x}-${cell.y}`"
     ></GameCell>
   </div>
@@ -38,15 +39,14 @@ export default {
   },
   data() {
     return {
-      buildings: new Map(),
-      // ✅ Переносим `cells` в data()
+      cellMap: new Map(),
       canBuildStatus: true,
       selectedArea: [],
     };
   },
   computed: {
     ...mapState("selection", ["selectedItem"]),
-    ...mapState("grid", ["cells"]),
+    ...mapState("grid", ["cells", "buildings"]),
     gridStyle() {
       return {
         display: "grid",
@@ -57,9 +57,9 @@ export default {
   },
   methods: {
     ...mapActions("grid", ["initializeGrid"]),
-    ...mapMutations("grid", ["updateCells", "AddBuilding"]),
+    ...mapMutations("grid", ["updateCells", "setBuilding"]),
     findCellIndex(x, y) {
-      return this.cells.findIndex((cell) => cell.x === x && cell.y === y);
+      return this.cellMap.get(`${x}-${y}`) ?? -1;
     },
     handleCellHover({ x, y }) {
       this.canBuildStatus = true;
@@ -112,11 +112,14 @@ export default {
         const index = this.findCellIndex(x, y);
         this.updateCells({ index: index, updates: { children: this.selectedItem.component } });
         // this.cells[index].children = this.selectedItem.component;
-        this.buildings.set(`${x}-${y}`, {
-          component: this.selectedItem.component,
-          occupies: this.selectedArea,
-          index: index,
+        this.setBuilding({
+          key: `${x}-${y}`,
+          building: {
+            occupies: this.selectedItem.occupies,
+            index: index,
+          },
         });
+
         this.selectedArea.forEach((index) => {
           this.updateCells({ index: index, updates: { isOccupied: true, activeClass: "active_red" } });
           //   this.cells[index].isOccupied = true;
@@ -124,10 +127,30 @@ export default {
         });
       }
     },
+    handleDelete({ x, y }) {
+      const occupies = this.buildings.get(`${x}-${y}`).occupies;
+      const index = this.findCellIndex(x, y);
+      this.updateCells({ index: index, updates: { isOccupied: false, children: null } });
+      for (let i = x + occupies[0].x; i <= x + occupies[1].x; i++) {
+        for (let j = y + occupies[0].y; j <= y + occupies[1].y; j++) {
+          const localIndex = this.findCellIndex(i, j);
+          this.updateCells({ index: localIndex, updates: { isOccupied: false } });
+          //   this.cells[localIndex].activeClass = null;
+        }
+      }
+    },
   },
 
   mounted() {
     this.initializeGrid({ x: this.x, y: this.y });
+
+    let cellCount = 0;
+    for (let i = 0; i < this.x; i++) {
+      for (let j = 0; j < this.y; j++) {
+        this.cellMap.set(`${i}-${j}`, cellCount);
+        cellCount++;
+      }
+    }
   },
 };
 </script>

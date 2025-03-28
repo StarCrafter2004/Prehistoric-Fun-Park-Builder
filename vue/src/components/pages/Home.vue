@@ -1,7 +1,7 @@
 <template>
   <PageLayout>
     <section>
-      <GameGrid :x="40" :y="40" />
+      <GameGrid :x="20" :y="20" />
     </section>
     <BuildMenu />
   </PageLayout>

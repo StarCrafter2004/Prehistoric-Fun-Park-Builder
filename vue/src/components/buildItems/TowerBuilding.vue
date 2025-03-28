@@ -1,5 +1,5 @@
 <template>
-  <div class="standart-build">
+  <div @click="onBuildingClick" class="standart-build">
     <div class="left-wall"></div>
     <div class="right-wall"></div>
     <div class="back-left-wall"></div>
@@ -15,7 +15,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    onBuildingClick() {
+      // if (this.selectedItem == null) {
+
+      // }
+      this.$emit("cell-delete", { x: this.x, y: this.y });
+    },
+  },
+};
 </script>
 
 <style scoped>

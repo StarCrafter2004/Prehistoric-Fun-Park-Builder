@@ -1,11 +1,17 @@
 <template>
-  <div class="cell" :class="[activeClass]" @click="onClick" @mouseleave="handleLeave" @mouseover="handleHover">
-    <component :style="{ position: 'absolute' }" :is="children" />
-    <component :style="{ opacity: '0.5' }" :is="temp" />
+  <div class="cell" :class="[activeClass]" @click="onCellClick" @mouseleave="handleLeave" @mouseover="handleHover">
+    <component
+      @cell-delete="handleDelete"
+      :style="{ position: 'absolute', pointerEvents: selectedItem == null ? 'auto' : 'none' }"
+      :is="children"
+    />
+    <component :style="{ opacity: '0.5', pointerEvents: 'none' }" :is="temp" />
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: {
     x: Number,
@@ -13,9 +19,13 @@ export default {
     activeClass: String,
     children: Object,
     temp: Object,
+    isMounted: Boolean,
+  },
+  computed: {
+    ...mapState("selection", ["selectedItem"]),
   },
   methods: {
-    onClick() {
+    onCellClick() {
       this.$emit("cell-click", { x: this.x, y: this.y });
     },
     handleHover() {
@@ -23,6 +33,11 @@ export default {
     },
     handleLeave() {
       this.$emit("cell-leave", { x: this.x, y: this.y });
+    },
+    handleDelete() {
+      if (this.selectedItem == null) {
+        this.$emit("cell-delete", { x: this.x, y: this.y });
+      }
     },
   },
 };

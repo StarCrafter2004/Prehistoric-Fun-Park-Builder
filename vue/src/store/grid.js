@@ -14,8 +14,12 @@ export default {
       Object.assign(state.cells[index], updates);
     },
 
-    AddBuilding(state, { key, building }) {
+    setBuilding(state, { key, building }) {
       state.buildings.set(key, building);
+    },
+    deleteBuilding(state, { x, y }) {
+      const key = `${x}-${y}`;
+      state.buildings.delete(key);
     },
     resetGrid(state) {
       state.cells = [];
@@ -32,8 +36,5 @@ export default {
       }
       commit("SET_CELLS", cells);
     },
-  },
-  getters: {
-    cells: (state) => state.cells,
   },
 };
