@@ -8,10 +8,10 @@
       :activeClass="cell.activeClass"
       :children="cell.children"
       :temp="cell.temp"
-      @cell-click="handleCellClick"
-      @cell-hover="handleCellHover"
-      @cell-leave="handleCellLeave"
-      @cell-delete="handleDelete"
+      @cell-click="({ x, y }) => handleCellClick({ x, y })"
+      @cell-hover="({ x, y }) => handleCellHover({ x, y })"
+      @cell-leave="({ x, y }) => handleCellLeave({ x, y })"
+      @cell-delete="({ x, y }) => handleDelete({ x, y })"
       :ref="`cell-${cell.x}-${cell.y}`"
     ></GameCell>
   </div>

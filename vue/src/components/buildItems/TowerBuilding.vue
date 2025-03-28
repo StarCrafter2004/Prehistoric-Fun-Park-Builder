@@ -1,5 +1,5 @@
 <template>
-  <div @click="onBuildingClick" class="standart-build">
+  <div @click="() => onBuildingClick()" class="standart-build">
     <div class="left-wall"></div>
     <div class="right-wall"></div>
     <div class="back-left-wall"></div>

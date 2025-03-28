@@ -1,7 +1,13 @@
 <template>
-  <div class="cell" :class="[activeClass]" @click="onCellClick" @mouseleave="handleLeave" @mouseover="handleHover">
+  <div
+    class="cell"
+    :class="[activeClass]"
+    @click="() => onCellClick()"
+    @mouseleave="() => handleLeave()"
+    @mouseover="() => handleHover()"
+  >
     <component
-      @cell-delete="handleDelete"
+      @cell-delete="() => handleDelete()"
       :style="{ position: 'absolute', pointerEvents: selectedItem == null ? 'auto' : 'none' }"
       :is="children"
     />

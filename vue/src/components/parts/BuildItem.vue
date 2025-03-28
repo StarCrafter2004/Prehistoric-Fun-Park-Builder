@@ -1,5 +1,5 @@
 <template>
-  <div class="build-item" @click="selectItem">
+  <div class="build-item" @click="() => selectItem()">
     <component :style="{ transform: 'rotateX(45deg) rotateZ(45deg)' }" :is="buildItemitem.component" />
   </div>
 </template>

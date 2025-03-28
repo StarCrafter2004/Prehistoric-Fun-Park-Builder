@@ -1,7 +1,12 @@
 <template>
   <div class="build-menu">
     <div class="build-items">
-      <BuildItem v-for="(item, index) in items" :key="index" :buildItemitem="item" @select-item="selectItem" />
+      <BuildItem
+        v-for="(item, index) in items"
+        :key="index"
+        :buildItemitem="item"
+        @select-item="(item) => selectItem(item)"
+      />
 
       <div class="build-item cancel" @click="cancelSelection">✖</div>
     </div>
@@ -45,21 +50,9 @@ export default {
           ],
         },
       ],
-      mouseX: 0,
-      mouseY: 0,
     };
   },
-  computed: {
-    dragStyle() {
-      return {
-        left: this.mouseX + "px",
-        top: this.mouseY + "px",
 
-        position: "absolute",
-        pointerEvents: "none",
-      };
-    },
-  },
   methods: {
     ...mapMutations("selection", ["setSelectedItem", "clearSelection"]),
     selectItem(item) {
